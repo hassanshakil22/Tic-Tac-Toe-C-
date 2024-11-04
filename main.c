@@ -103,17 +103,28 @@ void playerMove(char player){
 int col,row;
 do
 {
+
 printf("Player %c's turn.\n",player );
 
 printf("Enter column between (1-3) : ");
-scanf("%d",&col);
+  if (scanf("%d", &col) != 1 || col > 3 || col < 0  ) { // Check if input is an integer
+            printf("Invalid input ! \n");
+            while (getchar() != '\n'); // Clear the input buffer
+            continue;
+        }
 col--; // minusing one so that we get the base 0
+
+
 printf("Enter row between (1-3) : ");
-scanf("%d",&row);
+if (scanf("%d", &row) != 1 || row > 3 || row < 0  ) { // Check if input is an integer
+            printf("Invalid input ! \n");
+            while (getchar() != '\n'); // Clear the input buffer
+            continue;
+        }
 row--; // minusing one so that we get the base 0
-if (col > 2 || col < 0 || row > 2 || row < 0 || board[row][col] != ' ')
+if (board[row][col] != ' ')
 {
-    printf("Invalid input , please try again ! \n");
+    printf("Invalid input , Position already occupied! \n");
 }
 else
 {
@@ -121,7 +132,7 @@ board[row][col] = player;
 break;
 }
 
-} while (col > 2 || col < 0 || row > 2 || row < 0 || board[row][col] != ' ');
+} while (1); //infinite loop 
 
 
 };
