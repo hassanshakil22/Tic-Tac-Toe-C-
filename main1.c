@@ -1,63 +1,43 @@
 #include <stdio.h>
+#include <conio.h> // For _getch() to read arrow keys
 #include "tc.h"
-#include <conio.h>
-
 
 char board[3][3];
-const char PLAYER1 = 'X' ;
+const char PLAYER1 = 'X';
 const char PLAYER2 = 'O';
 
 void printBoard(int cursorRow, int cursorCol);
 void resetBoard();
 int checkFreespaces();
 void playerMove(char player);
-void computerMove();
 char checkWinner();
-void printWinner(char winner );
+void printWinner(char winner);
 
+void main() {
+    // tc_clear_screen();
+    char winner = ' ';
+    resetBoard();
 
+    do {
+        printBoard(-1, -1); // Print the initial board without cursor
 
-void main(){
-tc_clear_screen();
-char winner = ' ';
+        playerMove(PLAYER1);
+        winner = checkWinner();
+        if (winner != ' ' || checkFreespaces() == 0) {
+            break;
+        }
 
+        printBoard(-1, -1);
+        playerMove(PLAYER2);
+        winner = checkWinner();
+        if (winner != ' ' || checkFreespaces() == 0) {
+            break;
+        }
+    } while (winner == ' ' && checkFreespaces() != 0);
 
-// char name[50] = "" ;
-resetBoard();
-do
-{
-printBoard(-1,-1); //printing the board without any cursor 
-playerMove(PLAYER1);
-winner=checkWinner();
-if (winner != ' ' || checkFreespaces()==0  )
-{
-    break;
+    printBoard(-1, -1);
+    printWinner(winner);
 }
-
-printBoard(-1,-1);
-playerMove(PLAYER2);
-winner=checkWinner();
-if (winner != ' ' || checkFreespaces()==0  )
-{
-    break;
-}
-} while (winner == ' ' && checkFreespaces() != 0);
-printBoard(-1,-1);
-printWinner(winner);
-
-
-
-
-
-
-
-
-
-
-
-
-}
-
 
 void printBoard(int cursorRow, int cursorCol) {
     tc_clear_screen();
@@ -79,49 +59,34 @@ void printBoard(int cursorRow, int cursorCol) {
         printf("\n%s|-----|-----|-----|%s\n", TC_B_YEL, TC_NRM);
     }
 }
-void resetBoard(){
-    for (int i = 0; i < 3; i++)
-{
-    for (int j = 0; j < 3; j++)
-    {
-        board[i][j]= ' ';
-    }
-    
-}
 
-};
-
-
-int checkFreespaces(){
-int freeSpaces = 9;
-for (int i = 0; i < 3 ; i++)
-{
-    for (int j = 0; j < 3 ; j++)
-    {
-    if (board[i][j] != ' ')
-    {
-        freeSpaces--;         
-    }       
+void resetBoard() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            board[i][j] = ' ';
+        }
     }
 }
-return freeSpaces;
-};
-void playerMove(char player){
-int cursorRow = 0, cursorCol = 0;
-char key;
-do
-{
-printf("%sPlayer %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
-// if (player=='X')
-// {
-//     printf("%s%c's ",TC_B_GRN,player);
-// }
-// else
-// {
-//     printf("%s%c's ",TC_B_BLU,player);
-// }
-// printf("%sturn %s\n",TC_B_MAG,TC_BG_NRM);
-printBoard(cursorRow, cursorCol);
+
+int checkFreespaces() {
+    int freeSpaces = 9;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] != ' ') {
+                freeSpaces--;
+            }
+        }
+    }
+    return freeSpaces;
+}
+
+void playerMove(char player) {
+    int cursorRow = 0, cursorCol = 0;
+    char key;
+
+    do {
+        tc_clear_screen();
+        printBoard(cursorRow, cursorCol);
 
         key = _getch(); // Read key press
 
@@ -151,50 +116,31 @@ printBoard(cursorRow, cursorCol);
                 printf("Position already occupied! Choose another.\n");
             }
         }   
-    }while (1);
-
-};
-
-// void computerMove(){
-
-// };
-
-char checkWinner(){
-for (int i = 0; i < 3 ; i++)
-{
-    // checking rows
-    if (board[i][0] == board[i][1] && board[i][0] == board[i][2])
-    {
-        return board[i][0];
-        
-    }
-    // checking columns
-    if (board[0][i] == board[1][i] && board[0][i] == board[2][i])
-    {
-        return board[0][i];
-    }
+    }while (key != 27);
 }
-    // checking diagonals
-    if ((board[0][0] == board[1][1] && board[0][0] == board[2][2]) || (board[2][0] == board[1][1] && board[2][0] == board[0][2] ) )
-    {
+
+char checkWinner() {
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] != ' ') {
+            return board[i][0];
+        }
+        if (board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] != ' ') {
+            return board[0][i];
+        }
+    }
+    if ((board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] != ' ') ||
+        (board[2][0] == board[1][1] && board[2][0] == board[0][2] && board[2][0] != ' ')) {
         return board[1][1];
     }
-    return ' '; 
-};
-
-void printWinner(char winner){
-
-if (winner == PLAYER1 )
-{
-    printf("Congrats Player %c Wins !",PLAYER1);
-}
-else if (winner == PLAYER2 )
-{
-    printf("Congrats Player %c Wins !",PLAYER2);
-}
-else
-{
-    printf("It's a tie ! ");
+    return ' ';
 }
 
-};
+void printWinner(char winner) {
+    if (winner == PLAYER1) {
+        printf("Congrats Player %c Wins!\n", PLAYER1);
+    } else if (winner == PLAYER2) {
+        printf("Congrats Player %c Wins!\n", PLAYER2);
+    } else {
+        printf("It's a tie!\n");
+    }
+}
