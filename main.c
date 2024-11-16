@@ -20,14 +20,10 @@ void printWinner(char winner );
 void main(){
 tc_clear_screen();
 char winner = ' ';
-
-
-// char name[50] = "" ;
 resetBoard();
 do
 {
-printBoard(-1,-1); //printing the board without any cursor 
-// playerMove(PLAYER1);
+
 if (playerMove(PLAYER1)==1)
 {
     winner='q';
@@ -108,10 +104,17 @@ return freeSpaces;
 int playerMove(char player){
 int cursorRow = 0, cursorCol = 0;
 char key;
+int occupiedPos=0;
 do
 {
 printBoard(cursorRow, cursorCol);
-printf("%sPlayer %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
+if (occupiedPos)
+{
+    printf("%sPosition already Occupied ! , Try again %s\n",TC_BG_RED,TC_BG_NRM);
+    occupiedPos=0;
+}
+
+printf("%s Player %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
 
         key = _getch(); // Read key press
 
@@ -142,9 +145,7 @@ printf("%sPlayer %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,p
                 break;
                 return 0;
             } else {
-                printBoard(-1, -1); // Reprint the board if position is taken
-                printf("Position already occupied! Choose another.\n");
-                return 0;
+                occupiedPos = 1;    
             }
         } 
         else
@@ -203,5 +204,4 @@ else
 {
     printf("It's a tie ! ");
 }
-
 };
