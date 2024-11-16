@@ -10,7 +10,7 @@ const char PLAYER2 = 'O';
 void printBoard(int cursorRow, int cursorCol);
 void resetBoard();
 int checkFreespaces();
-void playerMove(char player);
+int playerMove(char player);
 void computerMove();
 char checkWinner();
 void printWinner(char winner );
@@ -27,7 +27,12 @@ resetBoard();
 do
 {
 printBoard(-1,-1); //printing the board without any cursor 
-playerMove(PLAYER1);
+// playerMove(PLAYER1);
+if (playerMove(PLAYER1)==1)
+{
+    winner='q';
+    break;
+}
 winner=checkWinner();
 if (winner != ' ' || checkFreespaces()==0  )
 {
@@ -35,7 +40,13 @@ if (winner != ' ' || checkFreespaces()==0  )
 }
 
 printBoard(-1,-1);
-playerMove(PLAYER2);
+// playerMove(PLAYER2);
+if (playerMove(PLAYER2)==1)
+{
+    winner='q';
+    break;
+}
+
 winner=checkWinner();
 if (winner != ' ' || checkFreespaces()==0  )
 {
@@ -44,18 +55,6 @@ if (winner != ' ' || checkFreespaces()==0  )
 } while (winner == ' ' && checkFreespaces() != 0);
 printBoard(-1,-1);
 printWinner(winner);
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -106,22 +105,13 @@ for (int i = 0; i < 3 ; i++)
 }
 return freeSpaces;
 };
-void playerMove(char player){
+int playerMove(char player){
 int cursorRow = 0, cursorCol = 0;
 char key;
 do
 {
-printf("%sPlayer %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
-// if (player=='X')
-// {
-//     printf("%s%c's ",TC_B_GRN,player);
-// }
-// else
-// {
-//     printf("%s%c's ",TC_B_BLU,player);
-// }
-// printf("%sturn %s\n",TC_B_MAG,TC_BG_NRM);
 printBoard(cursorRow, cursorCol);
+printf("%sPlayer %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
 
         key = _getch(); // Read key press
 
@@ -132,25 +122,38 @@ printBoard(cursorRow, cursorCol);
                 case 72: // Up arrow
                     cursorRow = (cursorRow > 0) ? cursorRow - 1 : 2;
                     break;
+                    return 0;
                 case 80: // Down arrow
                     cursorRow = (cursorRow < 2) ? cursorRow + 1 : 0;
                     break;
+                    return 0;
                 case 75: // Left arrow
                     cursorCol = (cursorCol > 0) ? cursorCol - 1 : 2;
                     break;
+                    return 0;
                 case 77: // Right arrow
                     cursorCol = (cursorCol < 2) ? cursorCol + 1 : 0;
                     break;
+                    return 0;
             }
         } else if (key == 13) { // Enter key to place the marker
             if (board[cursorRow][cursorCol] == ' ') {
                 board[cursorRow][cursorCol] = player;
                 break;
+                return 0;
             } else {
                 printBoard(-1, -1); // Reprint the board if position is taken
                 printf("Position already occupied! Choose another.\n");
+                return 0;
             }
-        }   
+        } 
+        else
+        {
+            return 1;
+        }
+        
+          
+               
     }while (1);
 
 };
@@ -191,6 +194,10 @@ if (winner == PLAYER1 )
 else if (winner == PLAYER2 )
 {
     printf("Congrats Player %c Wins !",PLAYER2);
+}
+else if (winner == 'q')
+{
+    printf("Game Quitted");
 }
 else
 {
