@@ -10,15 +10,17 @@ char choices[2][100]={
 };
 const char PLAYER1 = 'X' ;
 const char PLAYER2 = 'O';
+const char COMPUTER = 'O';
 
 void printBoard(int cursorRow, int cursorCol);
 void resetBoard();
 int checkFreespaces();
 int playerMove(char player);
-void computerMove();
+void computerMove(char computer);
 char checkWinner();
 void printWinner(char winner );
 void dualPlayer(char winner);
+void singlePlayer(char winner);
 int playChoice();
 
 void main(){
@@ -28,7 +30,7 @@ char winner = ' ';
 int choice=playChoice();
 if (choice==0)
 {
-    printf("play single");
+singlePlayer(winner);
 }
 else
 {
@@ -36,10 +38,7 @@ dualPlayer(winner);
 }
 }
 
-
-
 void printBoard(int cursorRow, int cursorCol) {
-    // tc_clear_screen();
     printf(" %s-----------------\n", TC_B_YEL);
     for (int i = 0; i < 3; i++) {
         printf("%s|", TC_B_YEL);
@@ -98,11 +97,8 @@ if (occupiedPos)
     printf("%sPosition already Occupied ! , Try again %s\n",TC_BG_RED,TC_BG_NRM);
     occupiedPos=0;
 }
-
 printf("%s Player %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,player,TC_B_MAG,TC_BG_NRM);
-
         key = _getch(); // Read key press
-
         // Detect arrow keys (multi-byte sequence in Windows)
         if (key == 0 || key == -32) {
             key = _getch(); // Read actual arrow key
@@ -142,10 +138,55 @@ printf("%s Player %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,
 
 };
 
-// void computerMove(){
+void computerMove(char computer){
+//check for immediate win
+for (int row = 0; row < 3 ; row++)
+{
+    for (int col = 0; col < 3 ; col++)
+    {
+        if (board[row][col] == ' ')
+        {
+            board[row][col] = COMPUTER ; 
+            if (checkWinner() == COMPUTER) // if checkwinner gives us O when we mark this
+            {
+                return;
+            }
+            board[row][col] = ' ' ; 
+        }   
+    }    
+}
+//check for immediate block
+for (int row = 0; row < 3 ; row++)
+{
+    for (int col = 0; col < 3 ; col++)
+    {
+        if (board[row][col] == ' ')
+        {
+            board[row][col] = PLAYER1 ; 
+            if (checkWinner() == PLAYER1) // if on playing X the checkwi gives us X
+            {
+                board[row][col] = COMPUTER ; 
+                return;
+            }
+            board[row][col] = ' ' ; 
+        }   
+    }    
+}
 
-// };
+//play first available move 
+for (int row = 0; row < 3 ; row++)
+{
+    for (int col = 0; col < 3 ; col++)
+    {
+        if (board[row][col] == ' ')
+        {
+            board[row][col] = COMPUTER ;
+            return;
+        }   
+    }    
+}
 
+};
 char checkWinner(){
 for (int i = 0; i < 3 ; i++)
 {
@@ -188,9 +229,44 @@ else
     printf("It's a tie ! ");
 }
 };
+void singlePlayer(char winner){
+printf("%s-----------Welcome to Single player-----------%s\n",TC_BG_YEL,TC_BG_NRM);
+do
+{
 
+if (playerMove(PLAYER1)==1)
+{
+    winner='q';
+    break;
+}
+winner=checkWinner();
+if (winner != ' ' || checkFreespaces()==0  )
+{
+    break;
+}   
+printBoard(-1,-1);
+
+computerMove(COMPUTER);
+winner=checkWinner();
+if (winner != ' ' || checkFreespaces()==0  )
+{
+    break;
+}
+} while (winner == ' ' && checkFreespaces() != 0);
+tc_clear_screen();
+printBoard(-1,-1);
+prinstWinner(winner);
+if (winner == 'O')
+{
+printf("\nSorry ! You lose!");
+}
+if (winner == 'X')
+{
+    printf("\nGreat Job You Won!");
+}
+}
 void dualPlayer(char winner){
-printf("%sWelcome to dual player %s\n",TC_BG_YEL,TC_BG_NRM);
+printf("%s-----------Welcome to dual player-----------%s\n",TC_BG_YEL,TC_BG_NRM);
 do
 {
 
