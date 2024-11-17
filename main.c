@@ -4,6 +4,10 @@
 
 
 char board[3][3];
+char choices[2][100]={
+    "play single player (vs computer)",
+    "play dual player (vs another player)"
+};
 const char PLAYER1 = 'X' ;
 const char PLAYER2 = 'O';
 
@@ -14,48 +18,28 @@ int playerMove(char player);
 void computerMove();
 char checkWinner();
 void printWinner(char winner );
-
-
+void dualPlayer(char winner);
+int playChoice();
 
 void main(){
 tc_clear_screen();
-char winner = ' ';
 resetBoard();
-do
+char winner = ' ';
+int choice=playChoice();
+if (choice==0)
 {
-
-if (playerMove(PLAYER1)==1)
-{
-    winner='q';
-    break;
+    printf("play single");
 }
-winner=checkWinner();
-if (winner != ' ' || checkFreespaces()==0  )
+else
 {
-    break;
+dualPlayer(winner);
+}
 }
 
-printBoard(-1,-1);
-// playerMove(PLAYER2);
-if (playerMove(PLAYER2)==1)
-{
-    winner='q';
-    break;
-}
-
-winner=checkWinner();
-if (winner != ' ' || checkFreespaces()==0  )
-{
-    break;
-}
-} while (winner == ' ' && checkFreespaces() != 0);
-printBoard(-1,-1);
-printWinner(winner);
-}
 
 
 void printBoard(int cursorRow, int cursorCol) {
-    tc_clear_screen();
+    // tc_clear_screen();
     printf(" %s-----------------\n", TC_B_YEL);
     for (int i = 0; i < 3; i++) {
         printf("%s|", TC_B_YEL);
@@ -107,6 +91,7 @@ char key;
 int occupiedPos=0;
 do
 {
+tc_clear_screen();
 printBoard(cursorRow, cursorCol);
 if (occupiedPos)
 {
@@ -151,9 +136,7 @@ printf("%s Player %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,
         else
         {
             return 1;
-        }
-        
-          
+        }         
                
     }while (1);
 
@@ -205,3 +188,81 @@ else
     printf("It's a tie ! ");
 }
 };
+
+void dualPlayer(char winner){
+printf("%sWelcome to dual player %s\n",TC_BG_YEL,TC_BG_NRM);
+do
+{
+
+if (playerMove(PLAYER1)==1)
+{
+    winner='q';
+    break;
+}
+winner=checkWinner();
+if (winner != ' ' || checkFreespaces()==0  )
+{
+    break;
+}   
+printBoard(-1,-1);
+if (playerMove(PLAYER2)==1)
+{
+    winner='q';
+    break;
+}
+
+winner=checkWinner();
+if (winner != ' ' || checkFreespaces()==0  )
+{
+    break;
+}
+} while (winner == ' ' && checkFreespaces() != 0);
+tc_clear_screen();
+printBoard(-1,-1);
+printWinner(winner);
+}
+
+int playChoice(){
+char key;
+int choiceRow=0;
+int choice=-1;
+do
+{
+printf("-----------Welcome To Tic-Tac-Toe-----------\n");
+for (int i = 0; i < 2 ; i++)
+{
+    if (choiceRow==i)
+    {
+        printf( "%s %d) --> %s%s\n", TC_GRN,i+1,choices[i],TC_NRM);        
+    }
+    else
+    {
+        printf( "%d) %s \n",i+1 ,choices[i]);
+    }   
+}
+key = _getch(); // Read key press
+        // Detect arrow keys (multi-byte sequence in Windows)
+        if (key == 0 || key == -32) {
+            key = _getch(); // Read actual arrow key
+            switch (key) {
+                case 72: // Up arrow
+                    choiceRow = (choiceRow > 0) ? choiceRow - 1 : 1;
+                    tc_clear_screen();
+                    break;
+                case 80: // Down arrow
+                    choiceRow = (choiceRow < 1) ? choiceRow  + 1 : 0;
+                    tc_clear_screen();
+                    break;
+            }}
+            else if (key == 13) { // Enter key to place the marker    
+                choice=choiceRow;   
+                break;
+            }
+            else
+            {
+                break;
+                choice=2;
+            }
+} while (choice!=choiceRow || choice==2 );
+return choice ;
+}
