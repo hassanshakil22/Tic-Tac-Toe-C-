@@ -4,9 +4,13 @@
 
 
 char board[3][3];
-char choices[2][100]={
+char playingChoices[2][100]={
     "play single player (vs computer)",
     "play dual player (vs another player)"
+};
+char difficultyLevel[2][100]={
+    "Human level (medium)",
+    "God level (No human on earth can beat this !! )"
 };
 const char PLAYER1 = 'X' ;
 const char PLAYER2 = 'O';
@@ -16,7 +20,7 @@ void printBoard(int cursorRow, int cursorCol);
 void resetBoard();
 int checkFreespaces();
 int playerMove(char player);
-void computerMove(char computer);
+void computerMove(char computer,int difficulty);
 char checkWinner();
 void printWinner(char winner );
 void dualPlayer(char winner);
@@ -25,17 +29,23 @@ int playChoice();
 
 void main(){
 tc_clear_screen();
+printf("-----------Welcome To Tic-Tac-Toe-----------\n");
 resetBoard();
 char winner = ' ';
-int choice=playChoice();
+int choice=playChoice(playingChoices);
 if (choice==0)
 {
 singlePlayer(winner);
 }
-else
+else if (choice==1)
 {
 dualPlayer(winner);
 }
+else
+{
+    printf("\nGame quitted!");
+}
+
 }
 
 void printBoard(int cursorRow, int cursorCol) {
@@ -138,7 +148,7 @@ printf("%s Player %s%c's %sturn %s\n",TC_B_MAG, player=='X' ? TC_B_GRN:TC_B_BLU,
 
 };
 
-void computerMove(char computer){
+void computerMove(char computer,int difficulty){
 //check for immediate win
 for (int row = 0; row < 3 ; row++)
 {
@@ -172,6 +182,33 @@ for (int row = 0; row < 3 ; row++)
         }   
     }    
 }
+//hard mode
+if (difficulty == 1)
+{
+    //play center
+    if (board[1][1]== ' ')
+    {
+        board[1][1]= COMPUTER ;
+        return;
+    }
+    //play for corner
+    int corners[4][2]={
+         {0,0},
+        {0,2},
+        {2,0},
+        {2,2},
+    };
+    // /iterating over corners ! 
+    for (int i = 0; i < 4; i++)
+    {
+    if (board[corners[i][0]][corners[i][1]]== ' ')
+    {
+        board[corners[i][0]][corners[i][1]]  = COMPUTER;
+        return;   
+    }
+    }
+}
+
 
 //play first available move 
 for (int row = 0; row < 3 ; row++)
@@ -231,6 +268,13 @@ else
 };
 void singlePlayer(char winner){
 printf("%s-----------Welcome to Single player-----------%s\n",TC_BG_YEL,TC_BG_NRM);
+int choice = playChoice(difficultyLevel);
+printf("%d",choice);
+if (choice != 1 && choice != 0)
+{
+    printf("\nGame quitted!");
+    return;
+}
 do
 {
 
@@ -246,7 +290,7 @@ if (winner != ' ' || checkFreespaces()==0  )
 }   
 printBoard(-1,-1);
 
-computerMove(COMPUTER);
+computerMove(COMPUTER,choice);
 winner=checkWinner();
 if (winner != ' ' || checkFreespaces()==0  )
 {
@@ -255,7 +299,7 @@ if (winner != ' ' || checkFreespaces()==0  )
 } while (winner == ' ' && checkFreespaces() != 0);
 tc_clear_screen();
 printBoard(-1,-1);
-prinstWinner(winner);
+printWinner(winner);
 if (winner == 'O')
 {
 printf("\nSorry ! You lose!");
@@ -298,13 +342,12 @@ printBoard(-1,-1);
 printWinner(winner);
 }
 
-int playChoice(){
+int playChoice(char choices[2][100]){
 char key;
 int choiceRow=0;
 int choice=-1;
 do
 {
-printf("-----------Welcome To Tic-Tac-Toe-----------\n");
 for (int i = 0; i < 2 ; i++)
 {
     if (choiceRow==i)
