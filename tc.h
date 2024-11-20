@@ -35,45 +35,5 @@
 
 #define tc_clear_screen() puts("\x1B[2J")
 
-//improved clear screen
-// #define tc_clear_screen() write(1, "\033[H\033[2J\033[3J", 11)
-
-// #define tc_move_cursor(X, Y) printf("\033[%d;%dH", Y, X)
-
-// void tc_get_cols_rows(int *cols, int *rows);
-
-// #define tc_enter_alt_screen() puts("\033[?1049h\033[H")
-// #define tc_exit_alt_screen() puts("\033[?1049l")
-
-// void tc_echo_off();
-// void tc_echo_on();
-
-// void tc_get_cols_rows(int *cols, int *rows){
-
-// 	struct winsize size;
-// 	ioctl(1, TIOCGWINSZ, &size);
-// 	*cols = size.ws_col;
-// 	*rows = size.ws_row;
-
-// }//tec_get_cols_rows*/
-
-// void tc_echo_off(){
-
-// 	struct termios term;
-// 	tcgetattr(1, &term);
-// 	term.c_lflag &= ~ECHO;
-// 	tcsetattr(1, TCSANOW, &term);
-
-// }//tc_echo_off*/
-
-// void tc_echo_on(){
-
-// 	struct termios term;
-// 	tcgetattr(1, &term);
-// 	term.c_lflag |= ECHO;
-// 	tcsetattr(1, TCSANOW, &term);
-
-// }//tc_echo_on*/
-
 #endif
 
