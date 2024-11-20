@@ -10,7 +10,8 @@ char playingChoices[2][100]={
 };
 char difficultyLevel[2][100]={
     "Human level (medium)",
-    "God level (No human on earth can beat this !! )"
+    "God level (hard)"
+    
 };
 const char PLAYER1 = 'X' ;
 const char PLAYER2 = 'O';
@@ -185,19 +186,36 @@ for (int row = 0; row < 3 ; row++)
 //hard mode
 if (difficulty == 1)
 {
-    //play center
-    if (board[1][1]== ' ')
-    {
-        board[1][1]= COMPUTER ;
-        return;
-    }
-    //play for corner
+     //play for corner
     int corners[4][2]={
          {0,0},
         {0,2},
         {2,0},
         {2,2},
     };
+        if (board[0][0] == COMPUTER)
+    {
+        board[2][2]   = COMPUTER;
+        return;   
+    }
+    else if (board[2][2] == COMPUTER)
+    {
+        board[0][0]   = COMPUTER;
+        return;
+    }
+    else if (board[2][0] == COMPUTER)
+    {
+        board[0][2]   = COMPUTER;
+        return;
+    }
+    else if (board[2][2] == COMPUTER)
+    {
+        board[0][0]   = COMPUTER;
+        return;
+    }
+    
+    
+    
     // /iterating over corners ! 
     for (int i = 0; i < 4; i++)
     {
@@ -206,8 +224,16 @@ if (difficulty == 1)
         board[corners[i][0]][corners[i][1]]  = COMPUTER;
         return;   
     }
+    
     }
-}
+
+    //play center
+    if (board[1][1]== ' ')
+    {
+        board[1][1]= COMPUTER ;
+        return;
+    }
+   }
 
 
 //play first available move 
