@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "tc.h"
 #include <conio.h>
-
+#include<windows.h>
 
 char board[3][3];
 char playingChoices[2][100]={
@@ -30,7 +30,10 @@ int playChoice();
 
 void main(){
 tc_clear_screen();
-printf("-----------Welcome To Tic-Tac-Toe-----------\n");
+printf("%s-----------Welcome To Tic-Tac-Toe-----------%s\n\n",TC_BG_CYN,TC_BG_NRM);
+Sleep(1000);
+printf("%sMade by%s : \t %sHassan Shakil \t Kashan Baig \t Faizan Ahmed%s\n\n",TC_B_CYN,TC_NRM,TC_B_RED,TC_NRM);
+Sleep(1000);
 resetBoard();
 char winner = ' ';
 int choice=playChoice(playingChoices);
@@ -186,36 +189,47 @@ for (int row = 0; row < 3 ; row++)
 //hard mode
 if (difficulty == 1)
 {
-     //play for corner
+        if (board[0][0] == COMPUTER || board[0][0] == PLAYER1)
+    {
+        if(board[2][2]== ' '){
+        board[2][2]   = COMPUTER;
+        return;   }
+    }
+    else if (board[2][2] == COMPUTER || board[2][2] == PLAYER1)
+    {
+        if(board[0][0]== ' '){
+        board[0][0]   = COMPUTER;
+        return;}
+    }
+    else if (board[2][0] == COMPUTER || board[2][0] == PLAYER1)
+    {
+        if(board[0][2]== ' '){
+        board[0][2]   = COMPUTER;
+        return;}
+    }
+    else if (board[0][2] == COMPUTER || board[0][2] == PLAYER1)
+    {
+        if(board[2][0]== ' '){
+        board[2][0]   = COMPUTER;
+        return;}
+    }
+    
+    
+    
+    //play center
+    if (board[1][1]== ' ')
+    {
+        board[1][1]= COMPUTER ;
+        return;
+    }
+   }
+//play for corner
     int corners[4][2]={
-         {0,0},
+        {0,0},
         {0,2},
         {2,0},
         {2,2},
     };
-        if (board[0][0] == COMPUTER)
-    {
-        board[2][2]   = COMPUTER;
-        return;   
-    }
-    else if (board[2][2] == COMPUTER)
-    {
-        board[0][0]   = COMPUTER;
-        return;
-    }
-    else if (board[2][0] == COMPUTER)
-    {
-        board[0][2]   = COMPUTER;
-        return;
-    }
-    else if (board[2][2] == COMPUTER)
-    {
-        board[0][0]   = COMPUTER;
-        return;
-    }
-    
-    
-    
     // /iterating over corners ! 
     for (int i = 0; i < 4; i++)
     {
@@ -226,14 +240,6 @@ if (difficulty == 1)
     }
     
     }
-
-    //play center
-    if (board[1][1]== ' ')
-    {
-        board[1][1]= COMPUTER ;
-        return;
-    }
-   }
 
 
 //play first available move 
@@ -277,19 +283,20 @@ void printWinner(char winner){
 
 if (winner == PLAYER1 )
 {
-    printf("Congrats Player %c Wins !",PLAYER1);
+    printf("%sCongrats Player %c Wins !%s",TC_B_GRN,PLAYER1,TC_NRM);
 }
 else if (winner == PLAYER2 )
 {
-    printf("Congrats Player %c Wins !",PLAYER2);
+        printf("%sCongrats Player %c Wins !%s",TC_B_GRN,PLAYER2,TC_NRM);
+
 }
 else if (winner == 'q')
 {
-    printf("Game Quitted");
+    printf("%sGame Quitted%s",TC_B_RED,TC_NRM);
 }
 else
 {
-    printf("It's a tie ! ");
+    printf("%sIt's a tie ! %s",TC_B_YEL,TC_B_NRM);
 }
 };
 void singlePlayer(char winner){
@@ -328,11 +335,11 @@ printBoard(-1,-1);
 printWinner(winner);
 if (winner == 'O')
 {
-printf("\nSorry ! You lose!");
+printf("\n%sSorry ! You lose!%s",TC_B_RED,TC_NRM);
 }
 if (winner == 'X')
 {
-    printf("\nGreat Job You Won!");
+    printf("\n%sGreat Job You Won!%s",TC_B_GRN,TC_NRM);
 }
 }
 void dualPlayer(char winner){
