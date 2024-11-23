@@ -50,27 +50,37 @@ else
     printf("\nGame quitted!");
 }
 
-}
-
-void printBoard(int cursorRow, int cursorCol) {
-    printf(" %s-----------------\n", TC_B_YEL);
+}void printBoard(int cursorRow, int cursorCol) {
+    printf("%s-------------------------------------------\n", TC_B_YEL);
     for (int i = 0; i < 3; i++) {
+        printf("%s|             |             |             |%s\n", TC_B_YEL, TC_NRM);
         printf("%s|", TC_B_YEL);
+        
         for (int j = 0; j < 3; j++) {
             if (i == cursorRow && j == cursorCol) {
-                printf(" [%c] ", board[i][j] == ' ' ? ' ' : board[i][j]);
+                // Cursor marker with content
+                printf("   [  %c  ]   ", board[i][j] == ' ' ? ' ' : board[i][j]);
             } else if (board[i][j] == PLAYER1) {
-                printf("  %s%c  ", TC_B_GRN, PLAYER1);
+                // Player 1's symbol (X)
+                printf("      %s%c      ", TC_B_GRN, PLAYER1);
             } else if (board[i][j] == PLAYER2) {
-                printf("  %s%c  ", TC_B_BLU, PLAYER2);
+                // Player 2's symbol (O)
+                printf("      %s%c      ", TC_B_BLU, PLAYER2);
             } else {
-                printf("     ");
+                // Empty cell
+                printf("             ");
             }
             printf("%s|", TC_B_YEL);
         }
-        printf("\n%s|-----|-----|-----|%s\n", TC_B_YEL, TC_NRM);
+        
+        printf("\n%s|             |             |             |%s\n", TC_B_YEL, TC_NRM);
+        if (i < 2) {
+            printf("%s|-------------|-------------|-------------|%s\n", TC_B_YEL, TC_NRM);
+        }
     }
+    printf("%s-------------------------------------------\n", TC_B_YEL);
 }
+
 void resetBoard(){
     for (int i = 0; i < 3; i++)
 {
