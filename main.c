@@ -44,7 +44,7 @@ void main(){
 tc_clear_screen();
 printf("%s-----------Welcome To Tic-Tac-Toe-----------%s\n\n",TC_BG_CYN,TC_BG_NRM);
 Sleep(1000);
-printf("%sMade by%s : \t %sHassan Shakil \t Kashan Baig \t Faizan Ahmed%s\n\n",TC_B_CYN,TC_NRM,TC_B_RED,TC_NRM);
+printf("%sMade by%s : \t %sHassan Shakil \t Kashan Baig %s\n\n",TC_B_CYN,TC_NRM,TC_B_RED,TC_NRM);
 Sleep(1000);
 struct Score score;
 score.draws=0;
