@@ -13,6 +13,17 @@ char difficultyLevel[2][100]={
     "God level (hard)"
     
 };
+char playAgainChoice[2][100]={
+    "Yes ! ",
+    "No ! "
+};
+struct Score
+{
+    int Xwins;
+    int Owins;
+    int draws;
+};
+
 const char PLAYER1 = 'X' ;
 const char PLAYER2 = 'O';
 const char COMPUTER = 'O';
@@ -23,10 +34,11 @@ int checkFreespaces();
 int playerMove(char player);
 void computerMove(char computer,int difficulty);
 char checkWinner();
-void printWinner(char winner );
-void dualPlayer(char winner);
-void singlePlayer(char winner);
+void printWinner(char winner, struct Score *score);
+void singlePlayer(char winner, struct Score *score);
+void dualPlayer(char winner, struct Score *score);
 int playChoice();
+void printScore(struct Score *score);
 
 void main(){
 tc_clear_screen();
@@ -34,16 +46,34 @@ printf("%s-----------Welcome To Tic-Tac-Toe-----------%s\n\n",TC_BG_CYN,TC_BG_NR
 Sleep(1000);
 printf("%sMade by%s : \t %sHassan Shakil \t Kashan Baig \t Faizan Ahmed%s\n\n",TC_B_CYN,TC_NRM,TC_B_RED,TC_NRM);
 Sleep(1000);
-resetBoard();
-char winner = ' ';
+struct Score score;
+score.draws=0;
+score.Owins=0;
+score.Xwins=0;
 int choice=playChoice(playingChoices);
+int playAgain;
 if (choice==0)
 {
-singlePlayer(winner);
+do
+{
+resetBoard();
+char winner = ' ';
+singlePlayer(winner,&score);
+printf("Do you want to play again ? \n");
+playAgain=playChoice(playAgainChoice);
+} while (playAgain==0);
+
 }
 else if (choice==1)
 {
-dualPlayer(winner);
+do
+{
+resetBoard();
+char winner = ' ';
+dualPlayer(winner,&score);
+printf("Do you want to play again ? \n");
+playAgain=playChoice(playAgainChoice);
+} while (playAgain==0);
 }
 else
 {
@@ -286,28 +316,26 @@ for (int i = 0; i < 3 ; i++)
     }
     return ' '; 
 };
-
-void printWinner(char winner){
-
-if (winner == PLAYER1 )
-{
-    printf("%sCongrats Player %c Wins !%s",TC_B_GRN,PLAYER1,TC_NRM);
+void printWinner(char winner, struct Score *score) {
+    if (winner == PLAYER1) {
+        printf("%sCongrats Player %c Wins!%s\n", TC_B_GRN, PLAYER1, TC_NRM);
+        score->Xwins++;
+        printScore(score);  // Corrected
+    } else if (winner == PLAYER2) {
+        printf("%sCongrats Player %c Wins!%s\n", TC_B_GRN, PLAYER2, TC_NRM);
+        score->Owins++;
+        printScore(score);  // Corrected
+    } else if (winner == 'q') {
+        printf("%sGame Quitted%s\n", TC_B_RED, TC_NRM);
+        printScore(score);  // Corrected
+    } else {
+        printf("%sIt's a tie!%s\n", TC_B_YEL, TC_B_NRM);
+        score->draws++;
+        printScore(score);  // Corrected
+    }
 }
-else if (winner == PLAYER2 )
-{
-        printf("%sCongrats Player %c Wins !%s",TC_B_GRN,PLAYER2,TC_NRM);
-
-}
-else if (winner == 'q')
-{
-    printf("%sGame Quitted%s",TC_B_RED,TC_NRM);
-}
-else
-{
-    printf("%sIt's a tie ! %s",TC_B_YEL,TC_B_NRM);
-}
-};
-void singlePlayer(char winner){
+void singlePlayer(char winner,struct Score *score){
+    
 printf("%s-----------Welcome to Single player-----------%s\n",TC_BG_YEL,TC_BG_NRM);
 int choice = playChoice(difficultyLevel);
 printf("%d",choice);
@@ -340,17 +368,17 @@ if (winner != ' ' || checkFreespaces()==0  )
 } while (winner == ' ' && checkFreespaces() != 0);
 tc_clear_screen();
 printBoard(-1,-1);
-printWinner(winner);
+printWinner(winner,score);
 if (winner == 'O')
 {
-printf("\n%sSorry ! You lose!%s",TC_B_RED,TC_NRM);
+printf("\n%sSorry ! You lose!%s\n",TC_B_RED,TC_NRM);
 }
 if (winner == 'X')
 {
-    printf("\n%sGreat Job You Won!%s",TC_B_GRN,TC_NRM);
+    printf("\n%sGreat Job You Won!%s\n",TC_B_GRN,TC_NRM);
 }
 }
-void dualPlayer(char winner){
+void dualPlayer(char winner, struct Score *score){
 printf("%s-----------Welcome to dual player-----------%s\n",TC_BG_YEL,TC_BG_NRM);
 do
 {
@@ -380,7 +408,7 @@ if (winner != ' ' || checkFreespaces()==0  )
 } while (winner == ' ' && checkFreespaces() != 0);
 tc_clear_screen();
 printBoard(-1,-1);
-printWinner(winner);
+printWinner(winner,score);
 }
 
 int playChoice(char choices[2][100]){
@@ -426,3 +454,18 @@ key = _getch(); // Read key press
 } while (choice!=choiceRow || choice==2 );
 return choice ;
 }
+void printScore(struct Score *score){
+printf("\n%sScore :%s \n%s-Player X's wins : %d%s  \n%s-Player O's wins : %d%s \n%s-Draws : %d%s \n\n", 
+    TC_BG_CYN,
+    TC_BG_NRM,
+    TC_B_GRN,
+    score->Xwins,      
+    TC_B_NRM,
+    TC_B_RED,
+    score->Owins,      
+    TC_B_NRM,
+    TC_B_YEL,
+    score->draws,      
+    TC_B_NRM
+    );
+      }
